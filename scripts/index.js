@@ -1,20 +1,20 @@
-let editBtn = document.querySelector(".profile__edit-button");
-let addCardBtn = document.querySelector(".profile__add-button");
-let editPopup = document.querySelector("#profileEdit");
-let addPopup = document.querySelector("#addCardPopup");
-let imgPopup = document.querySelector("#popupImg");
-let profileName = document.querySelector(".profile__name");
-let editForm = document.querySelector("#profile-edit");
-let addCardForm = document.querySelector("#addCard");
-let nameInput = document.querySelector("#name");
-let jobInput = document.querySelector("#about");
-let profileDescription = document.querySelector(".profile__description");
-let elements = document.querySelector(".elements");
-let cardTemplate = document.querySelector("#cardTemplate").content;
-let cardName = document.querySelector('#cardName');
-let cardLink = document.querySelector('#cardLink');
-let closeEdit = document.querySelector('#closeEditBtn');
-let closeAdd = document.querySelector('#closeAddBtn');
+const editBtn = document.querySelector(".profile__edit-button");
+const addCardBtn = document.querySelector(".profile__add-button");
+const editPopup = document.querySelector("#profileEdit");
+const addPopup = document.querySelector("#addCardPopup");
+const imgPopup = document.querySelector("#popupImg");
+const profileName = document.querySelector(".profile__name");
+const editForm = document.querySelector("#profile-edit");
+const addCardForm = document.querySelector("#addCard");
+const nameInput = document.querySelector("#name");
+const jobInput = document.querySelector("#about");
+const profileDescription = document.querySelector(".profile__description");
+const elements = document.querySelector(".elements");
+const cardTemplate = document.querySelector("#cardTemplate").content;
+const cardName = document.querySelector('#cardName');
+const cardLink = document.querySelector('#cardLink');
+const closeEdit = document.querySelector('#closeEditBtn');
+const closeAdd = document.querySelector('#closeAddBtn');
 
 const initialCards = [
     {
@@ -43,26 +43,22 @@ const initialCards = [
     }
 ];
 
-for (let i = 0; i < initialCards.length; i++) {
-    const card = cardTemplate.cloneNode(true);
-    card.querySelector('.element__image').src = initialCards[i].link;
-    card.querySelector('.element__subtitle').textContent = initialCards[i].name;
-    postBtnsHandler(card);
-    elements.append(card);
+for (let i = initialCards.length - 1; i >= 0; i--) {
+    addPost(initialCards[i].link, initialCards[i].name);
 }
 
-function openPopup(arg) {
-    arg.classList.add("popup_opened");
+function openPopup(popup) {
+    popup.classList.add("popup_opened");
 }
 
-function closePopupHandler(arg) {
-    arg.parentElement.parentElement.classList.remove("popup_opened");
+function closePopupHandler(popup) {
+    popup.parentElement.parentElement.classList.remove("popup_opened");
 }
 
 function editFormHandler(evt) {
     evt.preventDefault();
-    let name = nameInput.value;
-    let job = jobInput.value;
+    const name = nameInput.value;
+    const job = jobInput.value;
     profileName.textContent = name;
     profileDescription.textContent = job;
     closePopupHandler(closeEdit);
@@ -70,13 +66,9 @@ function editFormHandler(evt) {
 
 function addCardHandler(evt) {
     evt.preventDefault();
-    let name = cardName.value;
-    let link = cardLink.value;
-    let newCard = cardTemplate.cloneNode(true);
-    newCard.querySelector('.element__image').src = link;
-    newCard.querySelector('.element__subtitle').textContent = name;
-    postBtnsHandler(newCard);
-    elements.prepend(newCard);
+    const name = cardName.value;
+    const link = cardLink.value;
+    addPost(link, name);
     closePopupHandler(closeAdd);
     cardName.value = '';
     cardLink.value = '';
@@ -92,10 +84,13 @@ function editBtnHandler() {
     jobInput.value = profileDescription.textContent;
 }
 
-function postBtnsHandler(card) {
+function addPost(link, name) {
+    const card = cardTemplate.cloneNode(true);
     const trashBtn = card.querySelector(".element__trash");
     const likeBtn = card.querySelector(".element__like");
     const img = card.querySelector(".element__image");
+    card.querySelector('.element__image').src = link;
+    card.querySelector('.element__subtitle').textContent = name;
     img.addEventListener('click', (e) => {
         imgPopup.querySelector(".popup__image").src = e.target.src;
         imgPopup.querySelector(".popup__title").textContent = e.target.parentElement.querySelector(".element__subtitle").textContent;
@@ -106,7 +101,8 @@ function postBtnsHandler(card) {
     });
     trashBtn.addEventListener('click', (e) => {
         e.target.parentElement.remove();
-    })
+    });
+    elements.prepend(card);
 }
 
 
