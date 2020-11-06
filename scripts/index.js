@@ -2,6 +2,7 @@ let editBtn = document.querySelector(".profile__edit-button");
 let addCardBtn = document.querySelector(".profile__add-button");
 let editPopup = document.querySelector("#profileEdit");
 let addPopup = document.querySelector("#addCard");
+let imgPopup = document.querySelector("#popupImg");
 let profileName = document.querySelector(".profile__name");
 let editForm = document.querySelector("#profile-edit");
 let addCardForm = document.querySelector("#addCard");
@@ -12,7 +13,6 @@ let elements = document.querySelector(".elements");
 let cardTemplate = document.querySelector("#cardTemplate").content;
 let cardName = document.querySelector('#cardName');
 let cardLink = document.querySelector('#cardLink');
-
 let closeEdit = document.querySelector('#closeEditBtn');
 let closeAdd = document.querySelector('#closeAddBtn');
 
@@ -47,7 +47,7 @@ for (let i = 0; i < initialCards.length; i++) {
     const card = cardTemplate.cloneNode(true);
     card.querySelector('.element__image').src = initialCards[i].link;
     card.querySelector('.element__subtitle').textContent = initialCards[i].name;
-    trashBtnHandler(card);
+    postBtnsHandler(card);
     elements.append(card);
 }
 
@@ -68,16 +68,18 @@ function editFormHandler(evt) {
     closePopupHandler(closeEdit);
 }
 
-function addCardHandler(evt){
+function addCardHandler(evt) {
     evt.preventDefault();
     let name = cardName.value;
     let link = cardLink.value;
     let newCard = cardTemplate.cloneNode(true);
     newCard.querySelector('.element__image').src = link;
     newCard.querySelector('.element__subtitle').textContent = name;
-    trashBtnHandler(newCard);
+    postBtnsHandler(newCard);
     elements.prepend(newCard);
     closePopupHandler(closeAdd);
+    cardName.value = '';
+    cardLink.value = '';
 }
 
 function addCardBtnHandler() {
@@ -90,12 +92,23 @@ function editBtnHandler() {
     jobInput.value = profileDescription.textContent;
 }
 
-function trashBtnHandler(card) {
+function postBtnsHandler(card) {
     const trashBtn = card.querySelector(".element__trash");
+    const likeBtn = card.querySelector(".element__like");
+    const img = card.querySelector(".element__image");
+    img.addEventListener('click', (e) => {
+        imgPopup.querySelector(".popup__image").src = e.target.src;
+        imgPopup.querySelector(".popup__title").textContent = e.target.parentElement.querySelector(".element__subtitle").textContent;
+        openPopup(imgPopup);
+    });
+    likeBtn.addEventListener('click', (e) => {
+        e.target.classList.toggle('element__like_active');
+    });
     trashBtn.addEventListener('click', (e) => {
         e.target.parentElement.remove();
     })
 }
+
 
 editBtn.addEventListener('click', editBtnHandler);
 addCardBtn.addEventListener('click', addCardBtnHandler);
