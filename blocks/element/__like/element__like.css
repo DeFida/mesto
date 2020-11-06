@@ -10,6 +10,7 @@
   outline: none;
   border: none;
   justify-self: end;
+  color: black;
 }
 
 .element__like:hover {
