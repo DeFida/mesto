@@ -3,6 +3,8 @@ const addCardBtn = document.querySelector(".profile__add-button");
 const editPopup = document.querySelector("#profileEdit");
 const addPopup = document.querySelector("#addCardPopup");
 const imgPopup = document.querySelector("#popupImg");
+const imgPopupImg = imgPopup.querySelector(".popup__image");
+const imgPopupTitle = imgPopup.querySelector(".popup__title");
 const profileName = document.querySelector(".profile__name");
 const editForm = document.querySelector("#profile-edit");
 const addCardForm = document.querySelector("#addCard");
@@ -18,8 +20,12 @@ const closeAdd = document.querySelector('#closeAddBtn');
 
 const initialCards = [
     {
-        name: 'Архыз',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
+        name: 'Новенький',
+        link: 'https://sun9-35.userapi.com/REXbi8WvqGDWog8ss-jHgdCRNghOyrOZZxq31A/VjHUIQjW73c.jpg'
+    },
+    {
+        name: 'Урал',
+        link: 'https://sun9-46.userapi.com/hTqD64_ZxVoCanyFEKhvTbx24mlly7SReoeYnA/jaVucs1xlL0.jpg'
     },
     {
         name: 'Челябинская область',
@@ -28,10 +34,6 @@ const initialCards = [
     {
         name: 'Иваново',
         link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-    },
-    {
-        name: 'Камчатка',
-        link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
     },
     {
         name: 'Холмогорский район',
@@ -44,7 +46,8 @@ const initialCards = [
 ];
 
 for (let i = initialCards.length - 1; i >= 0; i--) {
-    addPost(initialCards[i].link, initialCards[i].name);
+    const post = createPost(initialCards[i].link, initialCards[i].name);
+    addPost(elements, post);
 }
 
 function openPopup(popup) {
@@ -68,7 +71,8 @@ function addCardHandler(evt) {
     evt.preventDefault();
     const name = cardName.value;
     const link = cardLink.value;
-    addPost(link, name);
+    const post = createPost(link, name);
+    addPost(elements, post);
     closePopupHandler(closeAdd);
     cardName.value = '';
     cardLink.value = '';
@@ -84,17 +88,21 @@ function editBtnHandler() {
     jobInput.value = profileDescription.textContent;
 }
 
-function addPost(link, name) {
+function createPost(link, name) {
     const card = cardTemplate.cloneNode(true);
     const trashBtn = card.querySelector(".element__trash");
     const likeBtn = card.querySelector(".element__like");
     const img = card.querySelector(".element__image");
-    card.querySelector('.element__image').src = link;
-    card.querySelector('.element__subtitle').textContent = name;
-    img.addEventListener('click', (e) => {
-        imgPopup.querySelector(".popup__image").src = e.target.src;
-        imgPopup.querySelector(".popup__title").textContent = e.target.parentElement.querySelector(".element__subtitle").textContent;
-        openPopup(imgPopup);
+    const subtitle = card.querySelector('.element__subtitle');
+    const elemCard = card.querySelector('.element');
+    img.src = link;
+    subtitle.textContent = name;
+    elemCard.addEventListener('click', (e) => {
+        if (e.target.classList[0] !== 'element__like' && e.target.classList[0] !== 'element__trash') {
+            imgPopupImg.src = link;
+            imgPopupTitle.textContent = name;
+            openPopup(imgPopup);
+        }
     });
     likeBtn.addEventListener('click', (e) => {
         e.target.classList.toggle('element__like_active');
@@ -102,9 +110,12 @@ function addPost(link, name) {
     trashBtn.addEventListener('click', (e) => {
         e.target.parentElement.remove();
     });
-    elements.prepend(card);
+    return card;
 }
 
+function addPost(element, post) {
+    element.prepend(post);
+}
 
 editBtn.addEventListener('click', editBtnHandler);
 addCardBtn.addEventListener('click', addCardBtnHandler);

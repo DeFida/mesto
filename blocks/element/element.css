@@ -6,4 +6,5 @@
   align-items: center;
   border-radius: 10px;
   position: relative;
+  cursor: pointer;
 }
