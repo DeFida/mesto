@@ -59,7 +59,6 @@ function closePopupHandler(popup) {
 }
 
 function editFormHandler(evt) {
-    evt.preventDefault();
     const name = nameInput.value;
     const job = jobInput.value;
     profileName.textContent = name;
@@ -68,7 +67,6 @@ function editFormHandler(evt) {
 }
 
 function addCardHandler(evt) {
-    evt.preventDefault();
     const name = cardName.value;
     const link = cardLink.value;
     const post = createPost(link, name);
@@ -76,6 +74,9 @@ function addCardHandler(evt) {
     closePopupHandler(closeAdd);
     cardName.value = '';
     cardLink.value = '';
+    const buttonElement = evt.target.querySelector('.popup__save');
+    buttonElement.classList.add('popup__save_inactive');
+    buttonElement.setAttribute('disabled', 'true');
 }
 
 function addCardBtnHandler() {
@@ -116,6 +117,18 @@ function createPost(link, name) {
 function addPost(element, post) {
     element.prepend(post);
 }
+
+// Вызовем функцию
+// включение валидации вызовом enableValidation
+// все настройки передаются при вызове
+
+enableValidation({
+    formSelector: '.popup__container',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__save',
+    inactiveButtonClass: 'popup__save_inactive',
+    inputErrorClass: 'popup__input_type_error',
+});
 
 editBtn.addEventListener('click', editBtnHandler);
 addCardBtn.addEventListener('click', addCardBtnHandler);

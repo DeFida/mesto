@@ -38,21 +38,35 @@
     <!--pop-up-->
 
     <div class="popup" id="addCardPopup">
-        <form class="popup__container" id="addCard" name="addCard">
+        <form class="popup__container" id="addCard" name="addCard" novalidate>
             <button class="popup__close popup__close_add-n-open" type="button" onclick="closePopupHandler(this)" id="closeAddBtn"></button>
             <h2 class="popup__heading popup__heading_add-card">Новое место</h2>
-            <input type="text" class="popup__input popup__input_add-card" id="cardName" name="cardName" placeholder="Название">
-            <input type="text" class="popup__input popup__input_add-card" id="cardLink" name="cardLink" placeholder="Ссылка на картинку">
+            <div class="popup__input-container">
+                <input type="text" class="popup__input popup__input_add-card" id="cardName" name="cardName" placeholder="Название" required>
+                <p id="cardName-error" class="popup__input-error"></p>
+            </div>
+            <div class="popup__input-container">
+                <input type="url" class="popup__input popup__input_add-card" id="cardLink" name="cardLink" placeholder="Ссылка на картинку" required>
+                <p id="cardLink-error" class="popup__input-error"></p>
+            </div>
             <button class="popup__save popup__save_add-card" type="submit">Создать</button>
         </form>
     </div>
 
     <div class="popup" id="profileEdit">
-        <form class="popup__container" id="profile-edit" name="profile-edit">
+        <form class="popup__container" id="profile-edit" name="profile-edit" novalidate>
             <button class="popup__close" type="button" onclick="closePopupHandler(this)" id="closeEditBtn"></button>
             <h2 class="popup__heading">Редактировать профиль</h2>
-            <input type="text" class="popup__input" id="name" name="name">
-            <input type="text" class="popup__input" id="about" name="about">
+            <div class="popup__input-container">
+                <input type="text" class="popup__input" id="name" name="name" required minlength="2" maxlength="40">
+                <p id="name-error" class="popup__input-error"></p>
+            </div>
+            
+            <div class="popup__input-container">
+                <input type="text" class="popup__input" id="about" name="about" required minlength="2" maxlength="200">
+                <p id="about-error" class="popup__input-error"></p>
+            </div>
+            
             <button class="popup__save" type="submit">Сохранить</button>
         </form>
     </div>
@@ -81,6 +95,7 @@
             </div>
         </div>
     </template>
+    <script src="./scripts/validation.js"></script>
     <script src="./scripts/index.js"></script>       
 </body>
 
