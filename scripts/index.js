@@ -2,6 +2,7 @@ const editBtn = document.querySelector(".profile__edit-button");
 const addCardBtn = document.querySelector(".profile__add-button");
 const editPopup = document.querySelector("#profileEdit");
 const addPopup = document.querySelector("#addCardPopup");
+const popupOverlays = Array.from(document.querySelectorAll(".popup"));
 const imgPopup = document.querySelector("#popupImg");
 const imgPopupImg = imgPopup.querySelector(".popup__image");
 const imgPopupTitle = imgPopup.querySelector(".popup__title");
@@ -50,8 +51,23 @@ for (let i = initialCards.length - 1; i >= 0; i--) {
     addPost(elements, post);
 }
 
+function closeOnOverlayClick(evt) {
+    if (evt.target.classList.contains('popup_opened')){
+        closePopupHandler(evt.target.querySelector('.popup__close'));
+    }
+}
+
+function closeOnOverlayKeyDown(evt) {
+    const openedPopup = document.querySelector('.popup_opened');
+    if (evt.key === 'Escape' && openedPopup !== null) {
+        closePopupHandler(openedPopup.querySelector('.popup__close'));
+    }
+}
+
 function openPopup(popup) {
+
     popup.classList.add("popup_opened");
+    
 }
 
 function closePopupHandler(popup) {
@@ -81,6 +97,7 @@ function addCardHandler(evt) {
 
 function addCardBtnHandler() {
     openPopup(addPopup);
+    
 }
 
 function editBtnHandler() {
@@ -130,7 +147,12 @@ enableValidation({
     inputErrorClass: 'popup__input_type_error',
 });
 
+popupOverlays.forEach((popupOverlay) => {
+    popupOverlay.addEventListener('click', closeOnOverlayClick);
+    document.addEventListener('keydown', closeOnOverlayKeyDown);
+})
+
 editBtn.addEventListener('click', editBtnHandler);
-addCardBtn.addEventListener('click', addCardBtnHandler);
 editForm.addEventListener('submit', editFormHandler);
 addCardForm.addEventListener('submit', addCardHandler);
+addCardBtn.addEventListener('click', addCardBtnHandler);

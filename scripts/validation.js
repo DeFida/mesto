@@ -87,7 +87,7 @@ const enableValidation = (settings) => {
             // У каждой формы отменим стандартное поведение
             evt.preventDefault();
         });
-
+        
         // Для каждой формы вызовем функцию setEventListeners,
         // передав ей элемент формы
         setEventListeners(popupElement, settings);
