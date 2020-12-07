@@ -1,3 +1,5 @@
+import Card from './Card.js';
+
 const editBtn = document.querySelector(".profile__edit-button");
 const addCardBtn = document.querySelector(".profile__add-button");
 const editPopup = document.querySelector("#profileEdit");
@@ -13,11 +15,12 @@ const nameInput = document.querySelector("#name");
 const jobInput = document.querySelector("#about");
 const profileDescription = document.querySelector(".profile__description");
 const elements = document.querySelector(".elements");
-const cardTemplate = document.querySelector("#cardTemplate").content;
 const cardName = document.querySelector('#cardName');
 const cardLink = document.querySelector('#cardLink');
 const closeEdit = document.querySelector('#closeEditBtn');
 const closeAdd = document.querySelector('#closeAddBtn');
+
+
 
 const initialCards = [
     {
@@ -47,7 +50,8 @@ const initialCards = [
 ];
 
 for (let i = initialCards.length - 1; i >= 0; i--) {
-    const post = createPost(initialCards[i].link, initialCards[i].name);
+    const card = new Card({name: initialCards[i].name, link: initialCards[i].link}, '#cardTemplate');
+    const post = card.createPost();
     addPost(elements, post);
 }
 
@@ -65,9 +69,7 @@ function closeOnOverlayKeyDown(evt) {
 }
 
 function openPopup(popup) {
-
     popup.classList.add("popup_opened");
-    
 }
 
 function closePopupHandler(popup) {
@@ -83,9 +85,8 @@ function editFormHandler(evt) {
 }
 
 function addCardHandler(evt) {
-    const name = cardName.value;
-    const link = cardLink.value;
-    const post = createPost(link, name);
+    const card = new Card({name: cardName.value, link: cardLink.value}, '#cardTemplate') 
+    const post = card.createPost();
     addPost(elements, post);
     closePopupHandler(closeAdd);
     cardName.value = '';
@@ -97,7 +98,6 @@ function addCardHandler(evt) {
 
 function addCardBtnHandler() {
     openPopup(addPopup);
-    
 }
 
 function editBtnHandler() {
@@ -106,32 +106,8 @@ function editBtnHandler() {
     jobInput.value = profileDescription.textContent;
 }
 
-function createPost(link, name) {
-    const card = cardTemplate.cloneNode(true);
-    const trashBtn = card.querySelector(".element__trash");
-    const likeBtn = card.querySelector(".element__like");
-    const img = card.querySelector(".element__image");
-    const subtitle = card.querySelector('.element__subtitle');
-    const elemCard = card.querySelector('.element');
-    img.src = link;
-    subtitle.textContent = name;
-    elemCard.addEventListener('click', (e) => {
-        if (e.target.classList[0] !== 'element__like' && e.target.classList[0] !== 'element__trash') {
-            imgPopupImg.src = link;
-            imgPopupTitle.textContent = name;
-            openPopup(imgPopup);
-        }
-    });
-    likeBtn.addEventListener('click', (e) => {
-        e.target.classList.toggle('element__like_active');
-    });
-    trashBtn.addEventListener('click', (e) => {
-        e.target.parentElement.remove();
-    });
-    return card;
-}
-
 function addPost(element, post) {
+
     element.prepend(post);
 }
 
