@@ -1,3 +1,5 @@
+import openPopup from "./index.js";
+
 export default class Card {
     constructor(data, selectorTemplate) {
         this._name = data.name;
@@ -25,8 +27,12 @@ export default class Card {
     _setEventListeners() {
         this.elemCard.addEventListener('click', (e) => {
             if (e.target.classList[0] !== 'element__like' && e.target.classList[0] !== 'element__trash') {
+                const imgPopup = document.querySelector("#popupImg");
+                const imgPopupImg = imgPopup.querySelector(".popup__image");
+                const imgPopupTitle = imgPopup.querySelector(".popup__title");
                 imgPopupImg.src = this.img.src;
                 imgPopupTitle.textContent = this.subtitle.textContent;
+                console.log(imgPopupImg, imgPopupTitle);
                 openPopup(imgPopup);
             }
         });
@@ -37,5 +43,5 @@ export default class Card {
             e.target.parentElement.remove();
         });
     }
-    
+
 }

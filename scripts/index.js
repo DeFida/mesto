@@ -1,4 +1,5 @@
 import Card from './Card.js';
+import FormValidator from './FormValidator.js';
 
 const editBtn = document.querySelector(".profile__edit-button");
 const addCardBtn = document.querySelector(".profile__add-button");
@@ -19,6 +20,8 @@ const cardName = document.querySelector('#cardName');
 const cardLink = document.querySelector('#cardLink');
 const closeEdit = document.querySelector('#closeEditBtn');
 const closeAdd = document.querySelector('#closeAddBtn');
+const closeBtns = Array.from(document.querySelectorAll('.popup__close'));
+const forms = Array.from(document.querySelectorAll('.popup__container'));
 
 
 
@@ -50,13 +53,13 @@ const initialCards = [
 ];
 
 for (let i = initialCards.length - 1; i >= 0; i--) {
-    const card = new Card({name: initialCards[i].name, link: initialCards[i].link}, '#cardTemplate');
+    const card = new Card({ name: initialCards[i].name, link: initialCards[i].link }, '#cardTemplate');
     const post = card.createPost();
     addPost(elements, post);
 }
 
 function closeOnOverlayClick(evt) {
-    if (evt.target.classList.contains('popup_opened')){
+    if (evt.target.classList.contains('popup_opened')) {
         closePopupHandler(evt.target.querySelector('.popup__close'));
     }
 }
@@ -68,7 +71,7 @@ function closeOnOverlayKeyDown(evt) {
     }
 }
 
-function openPopup(popup) {
+export default function openPopup(popup) {
     popup.classList.add("popup_opened");
 }
 
@@ -85,7 +88,7 @@ function editFormHandler(evt) {
 }
 
 function addCardHandler(evt) {
-    const card = new Card({name: cardName.value, link: cardLink.value}, '#cardTemplate') 
+    const card = new Card({ name: cardName.value, link: cardLink.value }, '#cardTemplate')
     const post = card.createPost();
     addPost(elements, post);
     closePopupHandler(closeAdd);
@@ -114,18 +117,26 @@ function addPost(element, post) {
 // Вызовем функцию
 // включение валидации вызовом enableValidation
 // все настройки передаются при вызове
-
-enableValidation({
-    formSelector: '.popup__container',
-    inputSelector: '.popup__input',
-    submitButtonSelector: '.popup__save',
-    inactiveButtonClass: 'popup__save_inactive',
-    inputErrorClass: 'popup__input_type_error',
+forms.forEach((e) => {
+    console.log(e.id);
+    const FormValidation = new FormValidator({
+        inputSelector: '.popup__input',
+        submitButtonSelector: '.popup__save',
+        inactiveButtonClass: 'popup__save_inactive',
+        inputErrorClass: 'popup__input_type_error',
+    }, `#${e.id}`);
+    FormValidation.enableValidation();
 });
 
 popupOverlays.forEach((popupOverlay) => {
     popupOverlay.addEventListener('click', closeOnOverlayClick);
     document.addEventListener('keydown', closeOnOverlayKeyDown);
+})
+
+closeBtns.forEach((e) => {
+    e.addEventListener('click', (e) => {
+        closePopupHandler(e.target);
+    })
 })
 
 editBtn.addEventListener('click', editBtnHandler);
