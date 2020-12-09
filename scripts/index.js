@@ -6,9 +6,6 @@ const addCardBtn = document.querySelector(".profile__add-button");
 const editPopup = document.querySelector("#profileEdit");
 const addPopup = document.querySelector("#addCardPopup");
 const popupOverlays = Array.from(document.querySelectorAll(".popup"));
-const imgPopup = document.querySelector("#popupImg");
-const imgPopupImg = imgPopup.querySelector(".popup__image");
-const imgPopupTitle = imgPopup.querySelector(".popup__title");
 const profileName = document.querySelector(".profile__name");
 const editForm = document.querySelector("#profile-edit");
 const addCardForm = document.querySelector("#addCard");
@@ -21,7 +18,6 @@ const cardLink = document.querySelector('#cardLink');
 const closeEdit = document.querySelector('#closeEditBtn');
 const closeAdd = document.querySelector('#closeAddBtn');
 const closeBtns = Array.from(document.querySelectorAll('.popup__close'));
-const forms = Array.from(document.querySelectorAll('.popup__container'));
 
 
 
@@ -117,16 +113,23 @@ function addPost(element, post) {
 // Вызовем функцию
 // включение валидации вызовом enableValidation
 // все настройки передаются при вызове
-forms.forEach((e) => {
-    console.log(e.id);
-    const FormValidation = new FormValidator({
-        inputSelector: '.popup__input',
-        submitButtonSelector: '.popup__save',
-        inactiveButtonClass: 'popup__save_inactive',
-        inputErrorClass: 'popup__input_type_error',
-    }, `#${e.id}`);
-    FormValidation.enableValidation();
-});
+
+const editProfileValidation = new FormValidator({
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__save',
+    inactiveButtonClass: 'popup__save_inactive',
+    inputErrorClass: 'popup__input_type_error',
+}, `#${editForm.id}`);
+
+const addCardValidation = new FormValidator({
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__save',
+    inactiveButtonClass: 'popup__save_inactive',
+    inputErrorClass: 'popup__input_type_error',
+}, `#${addCardForm.id}`);
+
+editProfileValidation.enableValidation();
+addCardValidation.enableValidation();
 
 popupOverlays.forEach((popupOverlay) => {
     popupOverlay.addEventListener('click', closeOnOverlayClick);
