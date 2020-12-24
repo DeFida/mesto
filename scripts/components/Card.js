@@ -1,3 +1,5 @@
+import openPopup from "../index.js";
+
 export default class Card {
     constructor(data, selectorTemplate) {
         this._name = data.name;
@@ -33,6 +35,9 @@ export default class Card {
     }
 
     _handlePreviewPicture() {
+        const imgPopup = document.querySelector("#popupImg");
+        const imgPopupImg = imgPopup.querySelector(".popup__image");
+        const imgPopupTitle = imgPopup.querySelector(".popup__title");
         imgPopupImg.src = this._img.src;
         imgPopupTitle.textContent = this._subtitle.textContent;
         openPopup(imgPopup);
@@ -41,9 +46,9 @@ export default class Card {
     _remove() {
         this._elemCard.remove();
     }
-    
+
     _like() {
-        console.log('sd');
         this._likeBtn.classList.toggle('element__like_active');
     }
+
 }
