@@ -22,6 +22,8 @@ const closeAdd = document.querySelector('#closeAddBtn');
 
 
 
+
+
 const initialCards = [
     {
         name: 'Новенький',
@@ -114,6 +116,8 @@ function addPost(element, post) {
 // Вызовем функцию
 // включение валидации вызовом enableValidation
 // все настройки передаются при вызове
+
+
 
 enableValidation({
     formSelector: '.popup__container',

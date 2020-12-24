@@ -39,7 +39,7 @@
 
     <div class="popup" id="addCardPopup">
         <form class="popup__container" id="addCard" name="addCard" novalidate>
-            <button class="popup__close popup__close_add-n-open" type="button" onclick="closePopupHandler(this)" id="closeAddBtn"></button>
+            <button class="popup__close popup__close_add-n-open" type="button" id="closeAddBtn"></button>
             <h2 class="popup__heading popup__heading_add-card">Новое место</h2>
             <div class="popup__input-container">
                 <input type="text" class="popup__input popup__input_add-card" id="cardName" name="cardName" placeholder="Название" required>
@@ -55,7 +55,7 @@
 
     <div class="popup" id="profileEdit">
         <form class="popup__container" id="profile-edit" name="profile-edit" novalidate>
-            <button class="popup__close" type="button" onclick="closePopupHandler(this)" id="closeEditBtn"></button>
+            <button class="popup__close" type="button" id="closeEditBtn"></button>
             <h2 class="popup__heading">Редактировать профиль</h2>
             <div class="popup__input-container">
                 <input type="text" class="popup__input" id="name" name="name" required minlength="2" maxlength="40">
@@ -75,7 +75,7 @@
 
     <div class="popup" id="popupImg">
         <div class="popup__img-container">
-            <button class="popup__close popup__close_add-n-open" type="button" onclick="closePopupHandler(this)" id="closeImgBtn"></button>
+            <button class="popup__close popup__close_add-n-open" type="button" id="closeImgBtn"></button>
             <img src="#" alt="Картинка" class="popup__image">
             <p class="popup__title"></p>
         </div>

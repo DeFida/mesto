@@ -11,31 +11,39 @@ export default class Card {
 
     createPost() {
         const card = this._getTemplate();
-        this.trashBtn = card.querySelector(".element__trash");
-        this.likeBtn = card.querySelector(".element__like");
-        this.img = card.querySelector(".element__image");
-        this.subtitle = card.querySelector('.element__subtitle');
-        this.elemCard = card.querySelector('.element');
-        this.img.src = this._link;
-        this.subtitle.textContent = this._name;
+        this._trashBtn = card.querySelector(".element__trash");
+        this._likeBtn = card.querySelector(".element__like");
+        this._img = card.querySelector(".element__image");
+        this._subtitle = card.querySelector('.element__subtitle');
+        this._elemCard = card.querySelector('.element');
+        this._img.src = this._link;
+        this._subtitle.textContent = this._name;
         this._setEventListeners();
         return card;
     }
 
     _setEventListeners() {
-        this.elemCard.addEventListener('click', (e) => {
+        this._elemCard.addEventListener('click', (e) => {
             if (e.target.classList[0] !== 'element__like' && e.target.classList[0] !== 'element__trash') {
-                imgPopupImg.src = this.img.src;
-                imgPopupTitle.textContent = this.subtitle.textContent;
-                openPopup(imgPopup);
+                this._handlePreviewPicture();
             }
         });
-        this.likeBtn.addEventListener('click', (e) => {
-            e.target.classList.toggle('element__like_active');
-        });
-        this.trashBtn.addEventListener('click', (e) => {
-            e.target.parentElement.remove();
-        });
+        this._likeBtn.addEventListener('click', () => this._like());
+        this._trashBtn.addEventListener('click', () => this._remove());
+    }
+
+    _handlePreviewPicture() {
+        imgPopupImg.src = this._img.src;
+        imgPopupTitle.textContent = this._subtitle.textContent;
+        openPopup(imgPopup);
+    }
+
+    _remove() {
+        this._elemCard.remove();
     }
     
+    _like() {
+        console.log('sd');
+        this._likeBtn.classList.toggle('element__like_active');
+    }
 }
