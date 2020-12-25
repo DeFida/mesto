@@ -1,4 +1,8 @@
-import Card from './Card.js';
+import Card from '../components/Card.js';
+import Section from '../components/Section.js';
+import PopupWithForm from '../components/PopupWithForm.js';
+import PopupWithImage from '../components/PopupWithImage.js';
+import UserInfo from '../components/UserInfo.js';
 import FormValidator from '../components/FormValidator.js';
 import {
     editBtn,
@@ -7,36 +11,46 @@ import {
     addPopup,
     profileName, 
     editForm, 
-    addCardForm, 
-    nameInput, 
-    jobInput, 
+    addCardForm,
     profileDescription, 
-    elements, 
-    cardName, 
-    cardLink, 
-    closeEdit, 
-    closeAdd,
+    elements,
     initialCards
 } from '../utils/constants.js';
 
-for (let i = initialCards.length - 1; i >= 0; i--) {
-    const card = new Card({ name: initialCards[i].name, link: initialCards[i].link }, '#cardTemplate');
-    const post = card.createPost();
-    addPost(elements, post);
-}
-
-function closeOnOverlayClick(evt) {
-    if (evt.target.classList.contains('popup_opened')) {
-        closePopupHandler(evt.target.querySelector('.popup__close'));
+const cardList = new Section({
+    items: initialCards,
+    renderer: (item) => {
+        const card = new Card({ name: item.name, link: item.link }, '#cardTemplate', () => {
+            const imagePopup = new PopupWithImage('#popupImg', item.name, item.link);
+            imagePopup.setEventListeners();
+            imagePopup.open();
+        });
+        const post = card.createPost();
+        cardList.addItem(post);
     }
-}
+},
+'.elements')
 
-function closeOnOverlayKeyDown(evt) {
-    const openedPopup = document.querySelector('.popup_opened');
-    if (evt.key === 'Escape' && openedPopup !== null) {
-        closePopupHandler(openedPopup.querySelector('.popup__close'));
+const addCardFormClass = new PopupWithForm(
+    '#addCardPopup',
+    (values) => {
+        const card = new Card({ name: values['cardName'], link: values['cardLink'] }, '#cardTemplate', () => {
+            const imagePopup = new PopupWithImage('#popupImg', values['cardName'], values['cardLink']);
+            imagePopup.setEventListeners();
+            imagePopup.open();
+        });
+        
+        const post = card.createPost();
+        console.log(post.querySelector('.element'));
+        cardList.addItem(post);
+        const buttonElement = addPopup.querySelector('.popup__save');
+        buttonElement.classList.add('popup__save_inactive');
+        buttonElement.setAttribute('disabled', 'true');
+        addCardFormClass.close();
     }
-}
+)
+
+
 
 
 
@@ -48,31 +62,12 @@ function editFormHandler(evt) {
     closePopupHandler(closeEdit);
 }
 
-function addCardHandler(evt) {
-    const card = new Card({ name: cardName.value, link: cardLink.value }, '#cardTemplate')
-    const post = card.createPost();
-    addPost(elements, post);
-    closePopupHandler(closeAdd);
-    cardName.value = '';
-    cardLink.value = '';
-    const buttonElement = evt.target.querySelector('.popup__save');
-    buttonElement.classList.add('popup__save_inactive');
-    buttonElement.setAttribute('disabled', 'true');
-}
 
-function addCardBtnHandler() {
-    openPopup(addPopup);
-}
 
 function editBtnHandler() {
     openPopup(editPopup);
     nameInput.value = profileName.textContent;
     jobInput.value = profileDescription.textContent;
-}
-
-function addPost(element, post) {
-
-    element.prepend(post);
 }
 
 // Вызовем функцию
@@ -97,6 +92,9 @@ editProfileValidation.enableValidation();
 addCardValidation.enableValidation();
 
 editBtn.addEventListener('click', editBtnHandler);
-editForm.addEventListener('submit', editFormHandler);
-addCardForm.addEventListener('submit', addCardHandler);
-addCardBtn.addEventListener('click', addCardBtnHandler);
+addCardBtn.addEventListener('click', addCardFormClass.open.bind(addCardFormClass));
+
+
+cardList.renderItems();
+
+addCardFormClass.setEventListeners();

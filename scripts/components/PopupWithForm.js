@@ -1,3 +1,9 @@
+import Popup from './Popup.js';
+import {
+    cardName, 
+    cardLink
+} from '../utils/constants.js';
+
 export default class PopupWithForm extends Popup {
     constructor(popupSelector, submitCallback) {
         super(popupSelector);
@@ -6,12 +12,18 @@ export default class PopupWithForm extends Popup {
     }
 
     _getInputValues() {
-        this._nameInput = this._popupElement.querySelector('#name');
-        this._jobInput = this._popupElement.querySelector('#about');
-        const name = this._nameInput.value;
-        const job = this._nameInput.value;
-        profileName.textContent = name;
-        profileDescription.textContent = job;
+        this._inputList = this._popupElement.querySelectorAll('.popup__input');
+
+        // создаём пустой объект
+        this._formValues = {};
+      
+        // добавляем в этот объект значения всех полей
+        this._inputList.forEach(input => {
+          this._formValues[input.name] = input.value;
+        });
+      
+        // возвращаем объект значений
+        return this._formValues;
     }
 
     close() {
@@ -23,6 +35,11 @@ export default class PopupWithForm extends Popup {
 
     setEventListeners() {
         super.setEventListeners();
-        this._popupElement.addEventListener('submit', this._submitCallback.bind(this));
+        // this._popupElement.addEventListener('submit', this._submitCallback(this._getInputValues()));
+        this._popupElement.addEventListener('submit', (evt) => {
+            evt.preventDefault();
+            this._submitCallback(this._getInputValues());
+            })
     }
 }
+
