@@ -1,8 +1,4 @@
 import Popup from './Popup.js';
-import {
-    cardName, 
-    cardLink
-} from '../utils/constants.js';
 
 export default class PopupWithForm extends Popup {
     constructor(popupSelector, submitCallback) {
@@ -16,19 +12,21 @@ export default class PopupWithForm extends Popup {
 
         // создаём пустой объект
         this._formValues = {};
-      
+
         // добавляем в этот объект значения всех полей
         this._inputList.forEach(input => {
-          this._formValues[input.name] = input.value;
+            this._formValues[input.name] = input.value;
         });
-      
+
         // возвращаем объект значений
         return this._formValues;
     }
 
+    // open() {
+
+    // }
+
     close() {
-        // this._nameInput = '';
-        // this._jobInput = '';
         this._popupElement.children[0].reset();
         this._popupElement.classList.remove("popup_opened");
     }
@@ -39,7 +37,7 @@ export default class PopupWithForm extends Popup {
         this._popupElement.addEventListener('submit', (evt) => {
             evt.preventDefault();
             this._submitCallback(this._getInputValues());
-            })
+        })
     }
 }
 

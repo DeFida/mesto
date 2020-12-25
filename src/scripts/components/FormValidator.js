@@ -4,9 +4,7 @@ export default class FormValidator {
         this._formSelector = formSelector;
     }
 
-    enableValidation = () => {
-        // Найдём все формы с указанным классом в DOM,
-        // сделаем из них массив методом Array.from
+    enableValidation() {
         this._popupElement = document.querySelector(this._formSelector);
 
         // Переберём полученную коллекцию
@@ -20,7 +18,7 @@ export default class FormValidator {
         this._setEventListeners();
     };
 
-    _setEventListeners = () => {
+    _setEventListeners() {
         // Находим все поля внутри формы,
         // сделаем из них массив методом Array.from
         this._inputList = Array.from(this._popupElement.querySelectorAll(this._settings.inputSelector));
@@ -38,7 +36,7 @@ export default class FormValidator {
         });
     };
 
-    _isValid = (inputElement) => {
+    _isValid(inputElement) {
         if (!inputElement.validity.valid) {
             // showInputError теперь получает параметром форму, в которой
             // находится проверяемое поле, и само это поле
@@ -50,7 +48,7 @@ export default class FormValidator {
         }
     };
 
-    _showInputError = (inputElement, errorMessage) => {
+    _showInputError(inputElement, errorMessage) {
         // Находим элемент ошибки внутри самой функции
         const errorElement = this._popupElement.querySelector(`#${inputElement.id}-error`);
         // Остальной код такой же
@@ -58,7 +56,7 @@ export default class FormValidator {
         errorElement.textContent = errorMessage;
     };
 
-    _hideInputError = (inputElement) => {
+    _hideInputError(inputElement) {
         // Находим элемент ошибки
         const errorElement = this._popupElement.querySelector(`#${inputElement.id}-error`);
         // Остальной код такой же
@@ -66,7 +64,7 @@ export default class FormValidator {
         errorElement.textContent = '';
     };
 
-    _toggleButtonState = () => {
+    _toggleButtonState() {
         // Если есть хотя бы один невалидный инпут
         if (this._hasInvalidInput()) {
             // сделай кнопку неактивной
@@ -79,7 +77,7 @@ export default class FormValidator {
         }
     };
 
-    _hasInvalidInput = () => {
+    _hasInvalidInput() {
         // проходим по этому массиву методом some
         return this._inputList.some((inputElement) => {
             // Если поле не валидно, колбэк вернёт true

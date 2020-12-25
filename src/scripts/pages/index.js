@@ -1,3 +1,5 @@
+import '../../styles/pages/index.css'; // css import
+
 import Card from '../components/Card.js';
 import Section from '../components/Section.js';
 import PopupWithForm from '../components/PopupWithForm.js';
@@ -12,9 +14,10 @@ import {
     profileName, 
     editForm, 
     addCardForm,
-    profileDescription, 
-    elements,
-    initialCards
+    profileDescription,
+    initialCards,
+    jobInput,
+    nameInput
 } from '../utils/constants.js';
 
 const cardList = new Section({
@@ -54,36 +57,23 @@ const editInfoFormClass = new PopupWithForm(
     '#profileEdit',
     (values) => {
         const userInfo = new UserInfo({ nameSelector: '.profile__name', jobSelector: '.profile__description' });
-        
-        userInfo
-        const buttonElement = addPopup.querySelector('.popup__save');
+        const user = userInfo.getUserInfo();
+        nameInput.value = user['name'];
+        jobInput.value = user['job'];
+        console.log(user['name'], user['job'])
+        userInfo.setUserInfo(values['name'], values['about']);
+        const buttonElement = editPopup.querySelector('.popup__save');
         buttonElement.classList.add('popup__save_inactive');
         buttonElement.setAttribute('disabled', 'true');
         editInfoFormClass.close();
     }
 )
 
-
-
-function editFormHandler(evt) {
-    const name = nameInput.value;
-    const job = jobInput.value;
-    profileName.textContent = name;
-    profileDescription.textContent = job;
-    closePopupHandler(closeEdit);
-}
-
-
-
 function editBtnHandler() {
     openPopup(editPopup);
     nameInput.value = profileName.textContent;
     jobInput.value = profileDescription.textContent;
 }
-
-// Вызовем функцию
-// включение валидации вызовом enableValidation
-// все настройки передаются при вызове
 
 const editProfileValidation = new FormValidator({
     inputSelector: '.popup__input',
@@ -102,10 +92,10 @@ const addCardValidation = new FormValidator({
 editProfileValidation.enableValidation();
 addCardValidation.enableValidation();
 
-editBtn.addEventListener('click', editBtnHandler);
+editBtn.addEventListener('click', editInfoFormClass.open.bind(editInfoFormClass));
 addCardBtn.addEventListener('click', addCardFormClass.open.bind(addCardFormClass));
-
 
 cardList.renderItems();
 
 addCardFormClass.setEventListeners();
+editInfoFormClass.setEventListeners();
