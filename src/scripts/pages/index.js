@@ -11,8 +11,8 @@ import {
     addCardBtn,
     editPopup,
     addPopup,
-    profileName, 
-    editForm, 
+    profileName,
+    editForm,
     addCardForm,
     profileDescription,
     initialCards,
@@ -32,7 +32,7 @@ const cardList = new Section({
         cardList.addItem(post);
     }
 },
-'.elements')
+    '.elements')
 
 const addCardFormClass = new PopupWithForm(
     '#addCardPopup',
@@ -42,7 +42,7 @@ const addCardFormClass = new PopupWithForm(
             imagePopup.setEventListeners();
             imagePopup.open();
         });
-        
+
         const post = card.createPost();
         console.log(post.querySelector('.element'));
         cardList.addItem(post);
@@ -69,11 +69,6 @@ const editInfoFormClass = new PopupWithForm(
     }
 )
 
-function editBtnHandler() {
-    openPopup(editPopup);
-    nameInput.value = profileName.textContent;
-    jobInput.value = profileDescription.textContent;
-}
 
 const editProfileValidation = new FormValidator({
     inputSelector: '.popup__input',
@@ -92,7 +87,17 @@ const addCardValidation = new FormValidator({
 editProfileValidation.enableValidation();
 addCardValidation.enableValidation();
 
-editBtn.addEventListener('click', editInfoFormClass.open.bind(editInfoFormClass));
+editBtn.addEventListener('click', () => {
+    editInfoFormClass.open();
+    const userInfo = new UserInfo({
+        nameSelector: '.profile__name',
+        jobSelector: '.profile__description'
+    });
+    const user = userInfo.getUserInfo();
+    nameInput.value = user['name'];
+    jobInput.value = user['job'];
+    console.log(user['name'], user['job'])
+});
 addCardBtn.addEventListener('click', addCardFormClass.open.bind(addCardFormClass));
 
 cardList.renderItems();
