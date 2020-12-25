@@ -50,7 +50,18 @@ const addCardFormClass = new PopupWithForm(
     }
 )
 
-
+const editInfoFormClass = new PopupWithForm(
+    '#profileEdit',
+    (values) => {
+        const userInfo = new UserInfo({ nameSelector: '.profile__name', jobSelector: '.profile__description' });
+        
+        userInfo
+        const buttonElement = addPopup.querySelector('.popup__save');
+        buttonElement.classList.add('popup__save_inactive');
+        buttonElement.setAttribute('disabled', 'true');
+        editInfoFormClass.close();
+    }
+)
 
 
 
