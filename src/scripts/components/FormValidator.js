@@ -4,11 +4,25 @@ export default class FormValidator {
         this._formSelector = formSelector;
     }
 
+    checkButtonState() {
+        this._toggleButtonState();
+
+        // this._inputList.forEach((inputElement) => {
+        //     this._isValid(inputElement);
+        // });
+    }
+
+    clearErrors() {
+        this._inputList.forEach((inputElement) => {
+            this._hideInputError(inputElement);
+        });
+    }
+
     enableValidation() {
-        this._popupElement = document.querySelector(this._formSelector);
+        this._form = document.querySelector(this._formSelector);
 
         // Переберём полученную коллекцию
-        this._popupElement.addEventListener('submit', (evt) => {
+        this._form.addEventListener('submit', (evt) => {
             // У каждой формы отменим стандартное поведение
             evt.preventDefault();
         });
@@ -21,8 +35,8 @@ export default class FormValidator {
     _setEventListeners() {
         // Находим все поля внутри формы,
         // сделаем из них массив методом Array.from
-        this._inputList = Array.from(this._popupElement.querySelectorAll(this._settings.inputSelector));
-        this._buttonElement = this._popupElement.querySelector(this._settings.submitButtonSelector);
+        this._inputList = Array.from(this._form.querySelectorAll(this._settings.inputSelector));
+        this._buttonElement = this._form.querySelector(this._settings.submitButtonSelector);
         // Обойдём все элементы полученной коллекции
         this._toggleButtonState();
         this._inputList.forEach((inputElement) => {
@@ -50,7 +64,7 @@ export default class FormValidator {
 
     _showInputError(inputElement, errorMessage) {
         // Находим элемент ошибки внутри самой функции
-        const errorElement = this._popupElement.querySelector(`#${inputElement.id}-error`);
+        const errorElement = this._form.querySelector(`#${inputElement.id}-error`);
         // Остальной код такой же
         inputElement.classList.add(this._settings.inputErrorClass);
         errorElement.textContent = errorMessage;
@@ -58,7 +72,7 @@ export default class FormValidator {
 
     _hideInputError(inputElement) {
         // Находим элемент ошибки
-        const errorElement = this._popupElement.querySelector(`#${inputElement.id}-error`);
+        const errorElement = this._form.querySelector(`#${inputElement.id}-error`);
         // Остальной код такой же
         inputElement.classList.remove(this._settings.inputErrorClass);
         errorElement.textContent = '';

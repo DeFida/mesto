@@ -1,4 +1,3 @@
-
 export default class Card {
     constructor(data, selectorTemplate, handleCardClick) {
         this._name = data.name;
@@ -19,13 +18,14 @@ export default class Card {
         this._subtitle = card.querySelector('.element__subtitle');
         this._elemCard = card.querySelector('.element');
         this._img.src = this._link;
+        this._img.alt = this._name;
         this._subtitle.textContent = this._name;
         this._setEventListeners();
         return card;
     }
 
     _setEventListeners() {
-        this._elemCard.addEventListener('click', (e) => {
+        this._img.addEventListener('click', (e) => {
             if (e.target.classList[0] !== 'element__like' && e.target.classList[0] !== 'element__trash') {
                 this._handleCardClick();
             }
