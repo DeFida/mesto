@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://defida:das200400@github.com/DeFida/mesto.git"
+    "url": "https://github.com/DeFida/mesto/"
   },
   "keywords": [],
   "author": "DeFida",
