@@ -18,6 +18,8 @@ import {
     nameInput
 } from '../scripts/utils/constants.js';
 
+
+
 const imagePopup = new PopupWithImage('#popupImg');
 imagePopup.setEventListeners();
 
