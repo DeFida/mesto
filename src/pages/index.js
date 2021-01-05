@@ -4,15 +4,13 @@ import Card from '../scripts/components/Card.js';
 import Section from '../scripts/components/Section.js';
 import PopupWithForm from '../scripts/components/PopupWithForm.js';
 import PopupWithImage from '../scripts/components/PopupWithImage.js';
+import PopupConfirm from '../scripts/components/PopupConfirm';
 import UserInfo from '../scripts/components/UserInfo.js';
 import FormValidator from '../scripts/components/FormValidator.js';
 import {
     editBtn,
     addCardBtn,
-    editPopup,
-    addPopup,
-    editForm,
-    addCardForm,
+    editAvaBtn,
     initialCards,
     jobInput,
     nameInput
@@ -21,7 +19,10 @@ import {
 
 
 const imagePopup = new PopupWithImage('#popupImg');
-imagePopup.setEventListeners();
+
+const confirmFormClass = new PopupConfirm(
+    '#popupConfirm'
+);
 
 const userInfo = new UserInfo({
     nameSelector: '.profile__name',
@@ -31,6 +32,8 @@ const userInfo = new UserInfo({
 function createCard(item) {
     const card = new Card({ name: item.name, link: item.link }, '#cardTemplate', () => {
         imagePopup.open(item.name, item.link);
+    }, () => {
+        confirmFormClass.open(card);
     });
     const post = card.createPost();
     return post
@@ -62,22 +65,37 @@ const editInfoFormClass = new PopupWithForm(
     }
 )
 
+const editAvaFormClass = new PopupWithForm(
+    '#avatarEdit',
+    (value) => {
+        editAvaFormClass.close();
+    }
+)
+
 const editProfileValidation = new FormValidator({
     inputSelector: '.popup__input',
     submitButtonSelector: '.popup__save',
     inactiveButtonClass: 'popup__save_inactive',
     inputErrorClass: 'popup__input_type_error',
-}, `#${editForm.id}`);
+}, `#profile-edit`);
 
 const addCardValidation = new FormValidator({
     inputSelector: '.popup__input',
     submitButtonSelector: '.popup__save',
     inactiveButtonClass: 'popup__save_inactive',
     inputErrorClass: 'popup__input_type_error',
-}, `#${addCardForm.id}`);
+}, `#addCard`);
+
+const editAvaValidation = new FormValidator({
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__save',
+    inactiveButtonClass: 'popup__save_inactive',
+    inputErrorClass: 'popup__input_type_error',
+}, `#avatar-edit`);
 
 editProfileValidation.enableValidation();
 addCardValidation.enableValidation();
+editAvaValidation.enableValidation();
 
 editBtn.addEventListener('click', () => {
     editInfoFormClass.open();
@@ -92,8 +110,15 @@ addCardBtn.addEventListener('click', () => {
     addCardValidation.checkButtonState();
     addCardValidation.clearErrors();
 });
-
+editAvaBtn.addEventListener('click', () => {
+    editAvaFormClass.open();
+    editAvaValidation.checkButtonState();
+    editAvaValidation.clearErrors();
+});
 cardList.renderItems();
 
+imagePopup.setEventListeners();
+confirmFormClass.setEventListeners();
+editAvaFormClass.setEventListeners();
 addCardFormClass.setEventListeners();
 editInfoFormClass.setEventListeners();

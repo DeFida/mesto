@@ -3,14 +3,13 @@ export const addCardBtn = document.querySelector(".profile__add-button");
 export const editPopup = document.querySelector("#profileEdit");
 export const addPopup = document.querySelector("#addCardPopup");
 export const profileName = document.querySelector(".profile__name");
-export const editForm = document.querySelector("#profile-edit");
-export const addCardForm = document.querySelector("#addCard");
 export const nameInput = document.querySelector("#name");
 export const jobInput = document.querySelector("#about");
 export const profileDescription = document.querySelector(".profile__description");
 export const elements = document.querySelector(".elements");
 export const cardName = document.querySelector('#cardName');
 export const cardLink = document.querySelector('#cardLink');
+export const editAvaBtn = document.querySelector('.profile__photo-overlay');
 
 export const initialCards = [
     {
