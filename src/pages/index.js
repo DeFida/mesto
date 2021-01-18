@@ -11,9 +11,9 @@ import {
     editBtn,
     addCardBtn,
     editAvaBtn,
-    initialCards,
     jobInput,
-    nameInput
+    nameInput,
+    dastan
 } from '../scripts/utils/constants.js';
 
 
@@ -30,7 +30,12 @@ const userInfo = new UserInfo({
 });
 
 function createCard(item) {
-    const card = new Card({ name: item.name, link: item.link }, '#cardTemplate', () => {
+    const card = new Card({
+        name: item.name,
+        link: item.link,
+        likes: item.likes,
+        id: item._id
+    }, '#cardTemplate', () => {
         imagePopup.open(item.name, item.link);
     }, () => {
         confirmFormClass.open(card);
@@ -38,15 +43,18 @@ function createCard(item) {
     const post = card.createPost();
     return post
 }
+dastan.getInitialCards().then((data) => {
+    const cardList = new Section({
+        items: data,
+        renderer: (item) => {
+            const post = createCard(item);
+            cardList.addItem(post);
+        }
+    },
+        '.elements')
+    cardList.renderItems();
+});
 
-const cardList = new Section({
-    items: initialCards,
-    renderer: (item) => {
-        const post = createCard(item);
-        cardList.addItem(post);
-    }
-},
-    '.elements')
 
 const addCardFormClass = new PopupWithForm(
     '#addCardPopup',
@@ -115,7 +123,6 @@ editAvaBtn.addEventListener('click', () => {
     editAvaValidation.checkButtonState();
     editAvaValidation.clearErrors();
 });
-cardList.renderItems();
 
 imagePopup.setEventListeners();
 confirmFormClass.setEventListeners();
