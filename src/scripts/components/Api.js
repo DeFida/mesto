@@ -1,5 +1,6 @@
 // 8b08d836-44f0-4512-90c9-f96fba78716b
 // cohort-19
+// 
 
 export default class Api {
     constructor(options) {
@@ -32,6 +33,34 @@ export default class Api {
 
     unlike(id) {
         return fetch(this.baseUrl + `/cards/likes/${id}`, {
+            headers: this.headers,
+            method: 'DELETE',
+        })
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+            })
+    }
+
+    createCard(name, link) {
+        return fetch(this.baseUrl + `/cards`, {
+            headers: this.headers,
+            method: 'POST',
+            body: JSON.stringify({
+                name: name,
+                link: link
+            })
+        })
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+            })
+    }
+
+    deleteCard(id) {
+        return fetch(this.baseUrl + `/cards/${id}`, {
             headers: this.headers,
             method: 'DELETE',
         })

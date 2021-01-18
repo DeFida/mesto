@@ -13,7 +13,8 @@ import {
     editAvaBtn,
     jobInput,
     nameInput,
-    dastan
+    dastan,
+    _id
 } from '../scripts/utils/constants.js';
 
 
@@ -34,7 +35,8 @@ function createCard(item) {
         name: item.name,
         link: item.link,
         likes: item.likes,
-        id: item._id
+        id: item._id,
+        owner: item.owner
     }, '#cardTemplate', () => {
         imagePopup.open(item.name, item.link);
     }, () => {
@@ -43,6 +45,8 @@ function createCard(item) {
     const post = card.createPost();
     return post
 }
+
+
 dastan.getInitialCards().then((data) => {
     const cardList = new Section({
         items: data,
@@ -59,10 +63,13 @@ dastan.getInitialCards().then((data) => {
 const addCardFormClass = new PopupWithForm(
     '#addCardPopup',
     (values) => {
-        const post = createCard({ name: values['cardName'], link: values['cardLink'] })
-        cardList.addItem(post);
-        addCardFormClass.close();
+        dastan.createCard(values['cardName'], values['cardLink']).then(data => {
+            const post = createCard({name: data.name, link: data.link, likes: data.likes, id: data._id, owner: data.owner})
+            console.log(document.querySelector('.elements'))
+            document.querySelector('.elements').prepend(post);
+            addCardFormClass.close();
     }
+        )}
 )
 
 const editInfoFormClass = new PopupWithForm(

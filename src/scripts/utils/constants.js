@@ -1,6 +1,7 @@
 import Api from '../components/Api.js'
 
 export const editBtn = document.querySelector(".profile__edit-button");
+export const _id = "9d244734aee233a156002208"
 export const addCardBtn = document.querySelector(".profile__add-button");
 export const editPopup = document.querySelector("#profileEdit");
 export const addPopup = document.querySelector("#addCardPopup");
