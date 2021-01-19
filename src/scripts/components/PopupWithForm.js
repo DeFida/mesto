@@ -34,5 +34,14 @@ export default class PopupWithForm extends Popup {
             this._submitCallback(this._getInputValues());
         })
     }
+
+    loaderRenderer(loader) {
+        if (loader) {
+            this._popupElement.querySelector('.popup__save').textContent = 'Сохранение...'
+        }
+        else {
+            this._popupElement.querySelector('.popup__save').textContent = 'Сохранить'
+        }
+    }
 }
 
