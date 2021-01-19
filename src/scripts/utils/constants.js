@@ -13,6 +13,7 @@ export const elements = document.querySelector(".elements");
 export const cardName = document.querySelector('#cardName');
 export const cardLink = document.querySelector('#cardLink');
 export const editAvaBtn = document.querySelector('.profile__photo-overlay');
+export const avatar = document.querySelector('.profile__photo');
 export const dastan = new Api({
     baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-19',
     headers: {

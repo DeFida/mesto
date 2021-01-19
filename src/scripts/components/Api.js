@@ -70,4 +70,47 @@ export default class Api {
                 }
             })
     }
+
+    getProfile() {
+        return fetch(this.baseUrl + '/users/me', {
+            headers: this.headers,
+            method: 'GET',
+        })
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+            })
+    }
+
+    setProfile(name, about) {
+        return fetch(this.baseUrl + '/users/me', {
+            headers: this.headers,
+            method: 'PATCH',
+            body: JSON.stringify({
+                name: name,
+                about: about
+            })
+        })
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+            })
+    }
+
+    setAvatar(url) {
+        return fetch(this.baseUrl + '/users/me/avatar', {
+            headers: this.headers,
+            method: 'PATCH',
+            body: JSON.stringify({
+                avatar: url
+            })
+        })
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                }
+            })
+    }
 }

@@ -14,7 +14,8 @@ import {
     jobInput,
     nameInput,
     dastan,
-    _id
+    _id,
+    avatar
 } from '../scripts/utils/constants.js';
 
 
@@ -27,9 +28,13 @@ const confirmFormClass = new PopupConfirm(
 
 const userInfo = new UserInfo({
     nameSelector: '.profile__name',
-    jobSelector: '.profile__description'
+    jobSelector: '.profile__description',
+    avaSelector: '.profile__photo'
 });
 
+dastan.getProfile().then(data => {
+    userInfo.setUserInfo(data['name'], data['about'], data['avatar'])
+})
 function createCard(item) {
     const card = new Card({
         name: item.name,
@@ -64,18 +69,21 @@ const addCardFormClass = new PopupWithForm(
     '#addCardPopup',
     (values) => {
         dastan.createCard(values['cardName'], values['cardLink']).then(data => {
-            const post = createCard({name: data.name, link: data.link, likes: data.likes, id: data._id, owner: data.owner})
+            const post = createCard({ name: data.name, link: data.link, likes: data.likes, id: data._id, owner: data.owner })
             console.log(document.querySelector('.elements'))
             document.querySelector('.elements').prepend(post);
             addCardFormClass.close();
+        }
+        )
     }
-        )}
 )
 
 const editInfoFormClass = new PopupWithForm(
     '#profileEdit',
     (values) => {
-        userInfo.setUserInfo(values['name'], values['about']);
+        dastan.setProfile(values['name'], values['about']).then(values => {
+            userInfo.setUserInfo(values['name'], values['about']);
+        })
         editInfoFormClass.close();
     }
 )
@@ -83,6 +91,10 @@ const editInfoFormClass = new PopupWithForm(
 const editAvaFormClass = new PopupWithForm(
     '#avatarEdit',
     (value) => {
+        console.log(value);
+        dastan.setAvatar(value['avatarUrl']).then(data => {
+            avatar.src = data['avatar']
+        });
         editAvaFormClass.close();
     }
 )
