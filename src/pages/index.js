@@ -33,7 +33,8 @@ const userInfo = new UserInfo({
 });
 
 dastan.getProfile().then(data => {
-    userInfo.setUserInfo(data['name'], data['about'], data['avatar'])
+    userInfo.setUserInfo(data['name'], data['about']);
+    userInfo.setAvatar(data['avatar']);
 })
 function createCard(item) {
     const card = new Card({
@@ -93,7 +94,7 @@ const editAvaFormClass = new PopupWithForm(
     (value) => {
         console.log(value);
         dastan.setAvatar(value['avatarUrl']).then(data => {
-            avatar.src = data['avatar']
+            userInfo.setAvatar(data['avatar'])
         });
         editAvaFormClass.close();
     }
