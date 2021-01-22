@@ -1,6 +1,3 @@
-// 8b08d836-44f0-4512-90c9-f96fba78716b
-// cohort-19
-// 
 
 export default class Api {
     constructor(options) {
@@ -8,39 +5,31 @@ export default class Api {
         this.headers = options['headers'];
     }
 
+    _handleOriginalResponse(res) {
+        if (!res.ok) {
+            return Promise.reject(`Error: ${res.status}`);
+        }
+        return res.json();
+    }
+    
     getInitialCards() {
         return fetch(this.baseUrl + '/cards', {
             headers: this.headers
-        })
-            .then(res => {
-                if (res.ok) {
-                    return res.json();
-                }
-            })
+        }).then(this._handleOriginalResponse);
     }
 
     like(id) {
         return fetch(this.baseUrl + `/cards/likes/${id}`, {
             headers: this.headers,
             method: 'PUT',
-        })
-            .then(res => {
-                if (res.ok) {
-                    return res.json();
-                }
-            })
+        }).then(this._handleOriginalResponse);
     }
 
     unlike(id) {
         return fetch(this.baseUrl + `/cards/likes/${id}`, {
             headers: this.headers,
             method: 'DELETE',
-        })
-            .then(res => {
-                if (res.ok) {
-                    return res.json();
-                }
-            })
+        }).then(this._handleOriginalResponse);
     }
 
     createCard(name, link) {
@@ -51,36 +40,21 @@ export default class Api {
                 name: name,
                 link: link
             })
-        })
-            .then(res => {
-                if (res.ok) {
-                    return res.json();
-                }
-            })
+        }).then(this._handleOriginalResponse);
     }
 
     deleteCard(id) {
         return fetch(this.baseUrl + `/cards/${id}`, {
             headers: this.headers,
             method: 'DELETE',
-        })
-            .then(res => {
-                if (res.ok) {
-                    return res.json();
-                }
-            })
+        }).then(this._handleOriginalResponse);
     }
 
     getProfile() {
         return fetch(this.baseUrl + '/users/me', {
             headers: this.headers,
             method: 'GET',
-        })
-            .then(res => {
-                if (res.ok) {
-                    return res.json();
-                }
-            })
+        }).then(this._handleOriginalResponse);
     }
 
     setProfile(name, about) {
@@ -91,12 +65,7 @@ export default class Api {
                 name: name,
                 about: about
             })
-        })
-            .then(res => {
-                if (res.ok) {
-                    return res.json();
-                }
-            })
+        }).then(this._handleOriginalResponse);
     }
 
     setAvatar(url) {
@@ -106,11 +75,6 @@ export default class Api {
             body: JSON.stringify({
                 avatar: url
             })
-        })
-            .then(res => {
-                if (res.ok) {
-                    return res.json();
-                }
-            })
+        }).then(this._handleOriginalResponse);
     }
 }

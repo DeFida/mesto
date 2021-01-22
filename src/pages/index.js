@@ -23,7 +23,15 @@ import {
 const imagePopup = new PopupWithImage('#popupImg');
 
 const confirmFormClass = new PopupConfirm(
-    '#popupConfirm'
+    '#popupConfirm', 
+    (card, id) => {
+        dastan.deleteCard(id).then(data => {
+            card.delete();
+            confirmFormClass.close();
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
 );
 
 const userInfo = new UserInfo({
@@ -32,71 +40,108 @@ const userInfo = new UserInfo({
     avaSelector: '.profile__photo'
 });
 
-dastan.getProfile().then(data => {
-    userInfo.setUserInfo(data['name'], data['about']);
-    userInfo.setAvatar(data['avatar']);
+Promise.all([
+    dastan.getProfile(),
+    dastan.getInitialCards()
+])
+.then(([userdata, initialCards]) => {
+    userInfo.setUserInfo(userdata['name'], userdata['about'], userdata['_id']);
+    userInfo.setAvatar(userdata['avatar']);
+    cardList.renderItems(initialCards.reverse());
+
 })
+.catch((err) => {
+    console.log(err);
+})
+
+
 function createCard(item) {
     const card = new Card({
         name: item.name,
         link: item.link,
         likes: item.likes,
         id: item._id,
-        owner: item.owner
+        ownerId: item.owner._id,
+        userId: userInfo.getUserInfo().id
     }, '#cardTemplate', () => {
         imagePopup.open(item.name, item.link);
     }, () => {
-        confirmFormClass.open(card);
+        confirmFormClass.open();
+        confirmFormClass.setCard(card, item._id);
+    }, (id, isliked) => {
+        if (isliked) {
+            dastan.like(id).then((res) => {
+                card.updateLikeCount(res.likes.length)
+            }).catch((err) => {
+                console.log(err);
+            });
+        }
+        else {
+            dastan.unlike(id).then((res) => {
+                card.updateLikeCount(res.likes.length)
+            }).catch((err) => {
+                console.log(err);
+            });
+        }
     });
     const post = card.createPost();
     return post
 }
 
 
-dastan.getInitialCards().then((data) => {
-    const cardList = new Section({
-        items: data,
-        renderer: (item) => {
-            const post = createCard(item);
-            cardList.addItem(post);
-        }
-    },
-        '.elements')
-    cardList.renderItems();
-});
+const cardList = new Section({
+    renderer: (item) => {
+        const post = createCard(item);
+        cardList.addItem(post);
+    }
+},
+    '.elements');
+
 
 
 const addCardFormClass = new PopupWithForm(
     '#addCardPopup',
     (values) => {
+        addCardFormClass.loaderRenderer(true);
         dastan.createCard(values['cardName'], values['cardLink']).then(data => {
             const post = createCard({ name: data.name, link: data.link, likes: data.likes, id: data._id, owner: data.owner })
-            console.log(document.querySelector('.elements'))
-            document.querySelector('.elements').prepend(post);
+            cardList.addItem(post);
+            addCardFormClass.loaderRenderer(false);
             addCardFormClass.close();
         }
-        )
+        ).catch((err) => {
+            console.log(err);
+        });
     }
 )
 
 const editInfoFormClass = new PopupWithForm(
     '#profileEdit',
     (values) => {
+        editInfoFormClass.loaderRenderer(true);
         dastan.setProfile(values['name'], values['about']).then(values => {
             userInfo.setUserInfo(values['name'], values['about']);
-        })
-        editInfoFormClass.close();
+            editInfoFormClass.loaderRenderer(false);
+            editInfoFormClass.close();
+        }).catch((err) => {
+            console.log(err);
+        });
+        
     }
 )
 
 const editAvaFormClass = new PopupWithForm(
     '#avatarEdit',
     (value) => {
-        console.log(value);
+        editAvaFormClass.loaderRenderer(true);
         dastan.setAvatar(value['avatarUrl']).then(data => {
             userInfo.setAvatar(data['avatar'])
+            editAvaFormClass.loaderRenderer(false);
+            editAvaFormClass.close();
+        }).catch((err) => {
+            console.log(err);
         });
-        editAvaFormClass.close();
+        
     }
 )
 

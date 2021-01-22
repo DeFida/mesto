@@ -1,28 +1,18 @@
 // import dastan from '../utils/constants.js';
-import Api from './Api.js'
-
-const dastan = new Api({
-    baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-19',
-    headers: {
-        authorization: '8b08d836-44f0-4512-90c9-f96fba78716b',
-        'Content-Type': 'application/json'
-    }
-});
 
 export default class Card {
-    constructor(data, selectorTemplate, handleCardClick, handleTrashClick) {
+    constructor(data, selectorTemplate, handleCardClick, handleTrashClick, handleLikeClick) {
         this._name = data.name;
         this._link = data.link;
         this._likes = data.likes;
-        this._owner = data.owner;
+        this._ownerId = data.ownerId;
+        this._userId = data.userId;
         this._id = data.id;
         this._handleCardClick = handleCardClick;
         this._handleTrashClick = handleTrashClick;
+        this._handleLikeClick = handleLikeClick;
         this._selectorTemplate = selectorTemplate;
-        this._isMine = false;
-        if (this._owner._id === '9d244734aee233a156002208') {
-            this._isMine = true;
-        }
+        this._isLiked = false;
     }
 
     _getTemplate() {
@@ -31,7 +21,7 @@ export default class Card {
 
     createPost() {
         const card = this._getTemplate();
-        if (this._isMine){
+        if (this._ownerId === this._userId){
             this._trashBtn = card.querySelector(".element__trash");
         }
         else {
@@ -48,7 +38,7 @@ export default class Card {
         this._subtitle.textContent = this._name;
         this._likeElement.textContent = this._likes.length;
         Array.from(this._likes).forEach(element => {
-            if (element._id === '9d244734aee233a156002208'){
+            if (element._id === this._userId){
                 this._likeBtn.classList.add('element__like_active');
             }
             
@@ -63,34 +53,23 @@ export default class Card {
                 this._handleCardClick();
             }
         });
-        this._likeBtn.addEventListener('click', () => this._like());
-        if (this._isMine){
+        this._likeBtn.addEventListener('click', () => {
+            this._likeBtn.classList.toggle('element__like_active');
+            this._handleLikeClick(this._id, this._likeBtn.classList.contains('element__like_active'));
+        })
+
+        if (this._ownerId === this._userId){
             this._trashBtn.addEventListener('click', this._handleTrashClick);
         }
         
     }
 
     delete() {
-        dastan.deleteCard(this._id).then(data => {
-            this._elemCard.remove();
-        })
+        this._elemCard.remove();
     }
 
-    _like() {
-        // this._likeBtn.classList.toggle('element__like_active');
-        if (this._likeBtn.classList.contains('element__like_active')) {
-            dastan.unlike(this._id).then((res) => {
-                this._likeElement.textContent = res.likes.length;
-            });
-            this._likeBtn.classList.remove('element__like_active');
-        }
-
-        else {
-            dastan.like(this._id).then((res) => {
-                this._likeElement.textContent = res.likes.length;
-            });
-            this._likeBtn.classList.add('element__like_active');
-        }
+    updateLikeCount(likeCount) {
+        this._likeElement.textContent = likeCount;
     }
 
 }
